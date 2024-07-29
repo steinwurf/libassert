@@ -9,6 +9,16 @@
         ]
     },
     {
+        "name": "gtest",
+        "resolver": "git",
+        "internal": true,
+        "method": "semver",
+        "major": 5,
+        "sources": [
+            "github.com/steinwurf/gtest.git"
+        ]
+    },
+    {
         "name": "cpptrace-source",
         "resolver": "git",
         "method": "checkout",
