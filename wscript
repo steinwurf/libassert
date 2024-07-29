@@ -9,6 +9,8 @@ from waflib import Build, Errors, Logs
 APPNAME = "libassert"
 VERSION = "1.0.0"
 
+def configure(conf):
+    conf.set_cxx_std(17)
 
 def build(bld):
     bld.post_mode = Build.POST_LAZY
@@ -48,25 +50,35 @@ def build(bld):
     if platform.system() == "Windows":
         lib_name = "assert"
     else:
-        lib_name = "libassert"
+        lib_name = "assert"
 
     bld.read_stlib(lib_name, paths=[lib_dir], export_includes=[include_dir])
 
-    #if bld.is_toplevel():
-    #    bld.program(
-    #        features="cxx test",
-    #        source=bld.path.ant_glob("test/**/*.cpp"),
-    #        target="srt_test",
-    #        use=[lib_name, "gtest", "platform_includes"],
-    #    )
+    cpptrace_lib_dir = build_dir.find_node("_deps/cpptrace-build")
+    cpptrace_include_dir = build_dir.find_node("_deps/cpptrace-src/include")
+    bld.read_stlib("cpptrace", paths=[cpptrace_lib_dir], export_includes=[cpptrace_include_dir])
+
+    libdwarf_lib_dir = build_dir.find_node("_deps/libdwarf-build/src/lib/libdwarf")
+    libdwarf_include_dir = build_dir.find_node("_deps/libdwarf-src/src/lib/libdwarf")
+    bld.read_stlib("dwarf", paths=[libdwarf_lib_dir], export_includes=[libdwarf_include_dir])
+
+    zstd_lib_dir = build_dir.find_node("_deps/zstd-build/lib")
+    zstd_include_dir = build_dir.find_node("_deps/zstd-src/lib")
+    bld.read_stlib("zstd", paths=[zstd_lib_dir], export_includes=[zstd_include_dir])
+
+    if bld.is_toplevel():
+        bld.program(
+            features="cxx test",
+            source=bld.path.ant_glob("test/**/*.cpp"),
+            target="libassert_test",
+            use=[lib_name, "gtest"],
+        )
 
 
 def CMakeBuildTask(task):
     CMAKE_BUILD_TYPE = "Release"
-    SRT_ENABLE_DEBUG = "OFF"
     if task.env["stored_options"]["cxx_debug"]:
         CMAKE_BUILD_TYPE = "Debug"
-        SRT_ENABLE_DEBUG = "ON"
 
     # This is the directory where the external library will be installed the
     # task.outputs[0] is the flag file that will be created once the external
