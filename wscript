@@ -28,13 +28,8 @@ def build(bld):
     # Declare the include directory for the external library
     include_dir = install_dir.make_node("include")
 
-    lib_dir = None
-
-    if install_dir.find_node("lib64"):
-        lib_dir = install_dir.make_node("lib64")
-    else:
-        # Declare the lib directory for the external library
-        lib_dir = install_dir.make_node("lib")
+    lib_dir = install_dir.make_node("lib")
+    lib64_dir = install_dir.make_node("lib64")
 
     # Build the external library through an external process
     bld(
@@ -52,10 +47,10 @@ def build(bld):
     #else:
     #    lib_name = "assert"
 
-    bld.read_stlib("assert", paths=[lib_dir], export_includes=[include_dir])
-    bld.read_stlib("cpptrace", paths=[lib_dir], export_includes=[include_dir])
-    bld.read_stlib("dwarf", paths=[lib_dir], export_includes=[include_dir])
-    bld.read_stlib("zstd", paths=[lib_dir], export_includes=[include_dir])
+    bld.read_stlib("assert", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
+    bld.read_stlib("cpptrace", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
+    bld.read_stlib("dwarf", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
+    bld.read_stlib("zstd", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
 
     if bld.is_toplevel():
         bld.program(
