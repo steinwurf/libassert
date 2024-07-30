@@ -36,7 +36,7 @@ def build(bld):
         # Declare the lib directory for the external library
         lib_dir = install_dir.make_node("lib")
 
-    # build the external library through an external process
+    # Build the external library through an external process
     bld(
         rule=CMakeBuildTask,
         target=build_dir.make_node("flag.lock"),
@@ -47,31 +47,22 @@ def build(bld):
     # once it is done create a second build group
     bld.add_group()
 
-    if platform.system() == "Windows":
-        lib_name = "assert"
-    else:
-        lib_name = "assert"
+    #if platform.system() == "Windows":
+    #    lib_name = "assert"
+    #else:
+    #    lib_name = "assert"
 
-    bld.read_stlib(lib_name, paths=[lib_dir], export_includes=[include_dir])
-
-    cpptrace_lib_dir = build_dir.find_node("_deps/cpptrace-build")
-    cpptrace_include_dir = build_dir.find_node("_deps/cpptrace-src/include")
-    bld.read_stlib("cpptrace", paths=[cpptrace_lib_dir], export_includes=[cpptrace_include_dir])
-
-    libdwarf_lib_dir = build_dir.find_node("_deps/libdwarf-build/src/lib/libdwarf")
-    libdwarf_include_dir = build_dir.find_node("_deps/libdwarf-src/src/lib/libdwarf")
-    bld.read_stlib("dwarf", paths=[libdwarf_lib_dir], export_includes=[libdwarf_include_dir])
-
-    zstd_lib_dir = build_dir.find_node("_deps/zstd-build/lib")
-    zstd_include_dir = build_dir.find_node("_deps/zstd-src/lib")
-    bld.read_stlib("zstd", paths=[zstd_lib_dir], export_includes=[zstd_include_dir])
+    bld.read_stlib("assert", paths=[lib_dir], export_includes=[include_dir])
+    bld.read_stlib("cpptrace", paths=[lib_dir], export_includes=[include_dir])
+    bld.read_stlib("dwarf", paths=[lib_dir], export_includes=[include_dir])
+    bld.read_stlib("zstd", paths=[lib_dir], export_includes=[include_dir])
 
     if bld.is_toplevel():
         bld.program(
             features="cxx test",
             source=bld.path.ant_glob("test/**/*.cpp"),
             target="libassert_test",
-            use=[lib_name, "gtest"],
+            use=["assert", "cpptrace", "dwarf", "zstd", "gtest"],
         )
 
 
@@ -113,8 +104,6 @@ def CMakeBuildTask(task):
 
     # SRT cmake flags
     flags += [
-        "-DENABLE_SHARED=OFF",
-        "-DENABLE_STATIC=ON",
         f"-DCMAKE_BUILD_TYPE={CMAKE_BUILD_TYPE}",
     ]
     flags = " ".join(flags)
@@ -144,7 +133,7 @@ def CMakeBuildTask(task):
         Logs.error(e.stderr)
         return -1
 
-    Logs.info(f"Installed srt lib to {output_dir}")
+    Logs.info(f"Installed lib to {output_dir}")
 
     # write a lock file so that a rebuild occurs if files are removed manually
     task.outputs[0].write("ok")

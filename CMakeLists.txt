@@ -3,7 +3,6 @@ project(libassert)
 
 find_package(Python COMPONENTS Interpreter)
 
-
 # Use waf to resolve dependencies
 if(NOT DEFINED STEINWURF_RESOLVE)
     message(STATUS "Resolving dependencies...")
@@ -21,7 +20,6 @@ if(NOT DEFINED STEINWURF_RESOLVE)
 endif()
 
 
-set(LIBDWARF_STATIC TRUE)
 add_subdirectory("${STEINWURF_RESOLVE}/libassert-source" libassert)
 
 #if (UNIX AND NOT APPLE)

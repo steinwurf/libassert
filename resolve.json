@@ -19,33 +19,6 @@
         ]
     },
     {
-        "name": "cpptrace-source",
-        "resolver": "git",
-        "method": "checkout",
-        "checkout": "v0.6.0",
-        "sources": [
-            "https://github.com/jeremy-rifkin/cpptrace.git"
-        ]
-    },
-    {
-        "name": "libdwarf-source",
-        "resolver": "git",
-        "method": "checkout",
-        "checkout": "v0.10.1",
-        "sources": [
-            "https://github.com/jeremy-rifkin/libdwarf-lite.git"
-        ]
-    },
-    {
-        "name": "zstd-source",
-        "resolver": "git",
-        "method": "checkout",
-        "checkout": "v1.5.5",
-        "sources": [
-            "https://github.com/facebook/zstd.git"
-        ]
-    },
-    {
         "name": "libassert-source",
         "resolver": "git",
         "method": "checkout",
