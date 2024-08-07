@@ -4,9 +4,7 @@
         "resolver": "git",
         "method": "semver",
         "major": 5,
-        "sources": [
-            "github.com/steinwurf/waf-tools.git"
-        ]
+        "source": "github.com/steinwurf/waf-tools.git"
     },
     {
         "name": "gtest",
@@ -14,17 +12,13 @@
         "internal": true,
         "method": "semver",
         "major": 5,
-        "sources": [
-            "github.com/steinwurf/gtest.git"
-        ]
+        "source": "github.com/steinwurf/gtest.git"
     },
     {
         "name": "libassert-source",
         "resolver": "git",
         "method": "checkout",
         "checkout": "v2.1.0",
-        "sources": [
-            "github.com/jeremy-rifkin/libassert.git"
-        ]
+        "source": "github.com/jeremy-rifkin/libassert.git"
     }
 ]

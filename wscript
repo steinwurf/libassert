@@ -20,7 +20,8 @@ def build(bld):
 
     # Declare the temporary build directory for the external library
     # it is best to keep it under the project build directory
-    build_dir = bld.bldnode.make_node("cmake_build")
+    # TODO: Figure out how to make this temporary again.
+    build_dir = bld.bldnode.make_node("libassert_build")
 
     # Declare the install directory for the external library
     install_dir = build_dir.make_node("install")

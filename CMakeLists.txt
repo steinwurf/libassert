@@ -19,19 +19,51 @@ if(NOT DEFINED STEINWURF_RESOLVE)
     set(STEINWURF_TOP_NAME ${PROJECT_NAME})
 endif()
 
+if (UNIX AND NOT APPLE)
+    # Linux-specific code
+    set(LIB_NAME "libassert.a")
+elseif (APPLE)
+    # Apple-Darwin-specific code
+    set(LIB_NAME "libassert.a")
+elseif (WIN32)
+    # Windows-specific code
+    set(LIB_NAME "assert.lib")
+endif ()
 
-add_subdirectory("${STEINWURF_RESOLVE}/libassert-source" libassert)
 
-#if (UNIX AND NOT APPLE)
-#    # Linux-specific code
-#    set(LIB_NAME "libassert.so")
-#elseif (APPLE)
-#    # Apple-Darwin-specific code
-#    set(LIB_NAME "libassert.so")
-#elseif (WIN32)
-#    # Windows-specific code
-#    set(LIB_NAME "assert.lib")
-#endif ()
+include(GNUInstallDirs)
+include(ExternalProject)
+ExternalProject_add(project_libassert
+    SOURCE_DIR ${STEINWURF_RESOLVE}/libassert-source
+    BINARY_DIR ${STEINWURF_RESOLVE}/libassert-source/cmake_build
+    INSTALL_DIR ${STEINWURF_RESOLVE}/libassert-source/install
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    BUILD_COMMAND ${CMAKE_COMMAND} --build ${STEINWURF_RESOLVE}/libassert-source/cmake_build
+    EXCLUDE_FROM_ALL TRUE
+    STEP_TARGETS build
+    INSTALL_COMMAND ${CMAKE_COMMAND} --install ${STEINWURF_RESOLVE}/libassert-source/cmake_build --prefix ${STEINWURF_RESOLVE}/libassert-source/install
+    BUILD_BYPRODUCTS ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_NAME} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libcpptrace.a  ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libdwarf.a  ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libzstd.a
+)
+
+add_library(libassert STATIC IMPORTED GLOBAL)
+add_dependencies(libassert project_libassert)
+add_library(steinwurf::libassert ALIAS libassert)
+
+# Make the include directory before we set the target properties otherwise cmake will complain
+# as this is resolved at configure time rather than build time where the header files are generated
+file(MAKE_DIRECTORY ${STEINWURF_RESOLVE}/libassert-source/install/include)
+set(LIBASSERT_GENERATED_INCLUDE_DIR ${STEINWURF_RESOLVE}/libassert-source/install/include)
+set_target_properties(libassert PROPERTIES
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_NAME}
+   INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+)
+
+# TODO: Find a way to get these IMPORTED files to be depended upon by libassert.a.
+#   ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libcpptrace.a
+#   ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libdwarf.a
+#   ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libzstd.a
+
+target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 
 #include(ExternalProject)
 #ExternalProject_add(project_zstd
@@ -121,8 +153,8 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
 
     ## Build test executable
     add_executable(libassert_tests ${libassert_test_sources})
-    add_dependencies(libassert_tests libassert::assert)
-    target_link_libraries(libassert_tests libassert::assert)
+    add_dependencies(libassert_tests steinwurf::libassert)
+    target_link_libraries(libassert_tests steinwurf::libassert)
     target_link_libraries(libassert_tests gtest_main)
 
     ## Make sure we compile with C++17 and do not use compiler specific extensions

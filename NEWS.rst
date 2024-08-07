@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Major: Restructure CMake's build architecture
 
 1.0.0
 -----
