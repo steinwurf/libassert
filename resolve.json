@@ -18,7 +18,7 @@
         "name": "libassert-source",
         "resolver": "git",
         "method": "checkout",
-        "checkout": "v2.1.0",
-        "source": "github.com/jeremy-rifkin/libassert.git"
+        "checkout": "c185bd7b3efb195f1e0f17286a24bb13d94cc85b",
+        "source": "github.com/steinwurf-sofie/libassert.git"
     }
 ]

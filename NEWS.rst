@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Patch: Pull in fix for nullptr warnings under GCC.
 
 2.0.0
 -----
