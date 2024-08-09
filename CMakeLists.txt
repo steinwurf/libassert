@@ -68,6 +68,7 @@ endif ()
 
 # install(TARGETS zstd)
 
+include(GNUInstallDirs) # For `lib/lib64` detection using `CMAKE_INSTALL_LIBDIR`.
 include(ExternalProject)
 ExternalProject_add(project_libassert
  SOURCE_DIR ${STEINWURF_RESOLVE}/libassert-source
@@ -78,7 +79,7 @@ ExternalProject_add(project_libassert
  EXCLUDE_FROM_ALL TRUE
  STEP_TARGETS build
  INSTALL_COMMAND ${CMAKE_COMMAND} --install ${STEINWURF_RESOLVE}/libassert-source/cmake_build --prefix ${STEINWURF_RESOLVE}/libassert-source/install --config ${CMAKE_BUILD_TYPE}
- BUILD_BYPRODUCTS ${STEINWURF_RESOLVE}/libassert-source/install/lib/${LIB_NAME} ${STEINWURF_RESOLVE}/libassert-source/install/lib/libdwarf.a ${STEINWURF_RESOLVE}/libassert-source/install/lib/libcpptrace.a ${STEINWURF_RESOLVE}/libassert-source/install/lib/libzstd.a
+ BUILD_BYPRODUCTS ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libassert.a ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libdwarf.a ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libcpptrace.a ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libzstd.a
 )
 
 find_package(ZLIB)
@@ -99,21 +100,21 @@ add_library(steinwurf::zstd ALIAS zstd)
 file(MAKE_DIRECTORY ${STEINWURF_RESOLVE}/libassert-source/install/include)
 set(LIBASSERT_GENERATED_INCLUDE_DIR ${STEINWURF_RESOLVE}/libassert-source/install/include)
 set_target_properties(libassert PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/lib/${LIB_NAME}
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libassert.a
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
 )
 set_target_properties(cpptrace PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/lib/libcpptrace.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libcpptrace.a
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
 )
 
 set_target_properties(libdwarf PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/lib/libdwarf.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libdwarf.a
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
 )
 
 set_target_properties(zstd PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/lib/libzstd.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libzstd.a
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
 )
 
@@ -128,7 +129,6 @@ target_link_libraries(libassert INTERFACE cpptrace)
 target_link_libraries(libassert INTERFACE libdwarf)
 target_link_libraries(libassert INTERFACE zstd)
 target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
-
 
 #message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 #add_library(libassert STATIC IMPORTED GLOBAL)
