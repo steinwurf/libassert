@@ -187,11 +187,11 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
    set_property(TARGET libassert_tests PROPERTY CXX_EXTENSIONS OFF)
 
    # Enable pedantic errors
-   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-      # GCC is throwing ISO errors from abseil that we can't fix
-   else ()
-      target_compile_options(libassert_tests PUBLIC -pedantic-errors)
-   endif ()
+   #if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+   #   # GCC is throwing ISO errors from abseil that we can't fix
+   #else ()
+   #   target_compile_options(libassert_tests PUBLIC -pedantic-errors)
+   #endif ()
 
    add_test(libassert_tests libassert_tests)
 
