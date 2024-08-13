@@ -29,13 +29,16 @@ endif()
 
 if (UNIX AND NOT APPLE)
     # Linux-specific code
-    set(LIB_NAME "libassert.a")
+    set(LIB_PREFIX "lib")
+    set(LIB_SUFFIX ".a")
 elseif (APPLE)
     # Apple-Darwin-specific code
-    set(LIB_NAME "libassert.a")
+    set(LIB_PREFIX "lib")
+    set(LIB_SUFFIX ".a")
 elseif (WIN32)
     # Windows-specific code
-    set(LIB_NAME "assert.lib")
+    set(LIB_PREFIX "")
+    set(LIB_SUFFIX ".lib")
 endif ()
 
 
@@ -71,15 +74,15 @@ endif ()
 include(GNUInstallDirs) # For `lib/lib64` detection using `CMAKE_INSTALL_LIBDIR`.
 include(ExternalProject)
 ExternalProject_add(project_libassert
- SOURCE_DIR ${STEINWURF_RESOLVE}/libassert-source
- BINARY_DIR ${STEINWURF_RESOLVE}/libassert-source/cmake_build
- INSTALL_DIR ${STEINWURF_RESOLVE}/libassert-source/install
- CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
- BUILD_COMMAND ${CMAKE_COMMAND} --build ${STEINWURF_RESOLVE}/libassert-source/cmake_build --config ${CMAKE_BUILD_TYPE}
- EXCLUDE_FROM_ALL TRUE
- STEP_TARGETS build
- INSTALL_COMMAND ${CMAKE_COMMAND} --install ${STEINWURF_RESOLVE}/libassert-source/cmake_build --prefix ${STEINWURF_RESOLVE}/libassert-source/install --config ${CMAKE_BUILD_TYPE}
- BUILD_BYPRODUCTS ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libassert.a ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libdwarf.a ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libcpptrace.a ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libzstd.a
+    SOURCE_DIR ${STEINWURF_RESOLVE}/libassert-source
+    BINARY_DIR ${STEINWURF_RESOLVE}/libassert-source/cmake_build
+    INSTALL_DIR ${STEINWURF_RESOLVE}/libassert-source/install
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    BUILD_COMMAND ${CMAKE_COMMAND} --build ${STEINWURF_RESOLVE}/libassert-source/cmake_build --config ${CMAKE_BUILD_TYPE}
+    EXCLUDE_FROM_ALL TRUE
+    STEP_TARGETS build
+    INSTALL_COMMAND ${CMAKE_COMMAND} --install ${STEINWURF_RESOLVE}/libassert-source/cmake_build --prefix ${STEINWURF_RESOLVE}/libassert-source/install --config ${CMAKE_BUILD_TYPE}
+    BUILD_BYPRODUCTS ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}assert${LIB_SUFFIX} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}cpptrace${LIB_SUFFIX} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
 )
 
 find_package(ZLIB)
@@ -99,24 +102,31 @@ add_library(steinwurf::zstd ALIAS zstd)
 
 file(MAKE_DIRECTORY ${STEINWURF_RESOLVE}/libassert-source/install/include)
 set(LIBASSERT_GENERATED_INCLUDE_DIR ${STEINWURF_RESOLVE}/libassert-source/install/include)
+
 set_target_properties(libassert PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libassert.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}assert${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+   CXX_STANDARD 17
 )
+
 set_target_properties(cpptrace PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libcpptrace.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}cpptrace${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+   CXX_STANDARD 17
 )
 
 set_target_properties(libdwarf PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libdwarf.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+   CXX_STANDARD 17
 )
 
 set_target_properties(zstd PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/libzstd.a
+   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+   CXX_STANDARD 17
 )
+
 
 
 target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
