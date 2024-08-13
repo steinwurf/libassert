@@ -1,4 +1,4 @@
-News for srt
+News for libassert
 ============
 
 This file lists the major changes between versions. For a more detailed list of
@@ -6,7 +6,7 @@ every change, see the Git log.
 
 Latest
 ------
-* tbd
+* Minor: Fix cmake lib64 builds.
 
 2.0.1
 -----
