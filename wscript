@@ -7,7 +7,7 @@ import platform
 from waflib import Build, Errors, Logs
 
 APPNAME = "libassert"
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 
 def configure(conf):
     conf.set_cxx_std(17)
