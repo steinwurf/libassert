@@ -66,6 +66,8 @@ def build(bld):
             "zstd", paths=[lib_dir, lib64_dir], export_includes=[include_dir]
         )
         use += ["zstd"]
+    else:
+        use += ["dbghelp"]
     if bld.is_toplevel():
         bld.program(
             features="cxx test",

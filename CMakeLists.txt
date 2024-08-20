@@ -191,7 +191,7 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
    # Build test executable
    add_executable(libassert_tests ${libassert_test_sources})
    add_dependencies(libassert_tests steinwurf::libassert)
-   target_link_libraries(libassert_tests PRIVATE DbgHelp)
+   target_link_libraries(libassert_tests DbgHelp)
    target_link_libraries(libassert_tests steinwurf::libassert)
    target_link_libraries(libassert_tests gtest_main)
 
