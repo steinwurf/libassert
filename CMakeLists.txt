@@ -191,9 +191,14 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
    # Build test executable
    add_executable(libassert_tests ${libassert_test_sources})
    add_dependencies(libassert_tests steinwurf::libassert)
-   target_link_libraries(libassert_tests DbgHelp)
+
+   # Link with DbgHelp if on Windows
+    if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
+         target_link_libraries(libassert_tests DbgHelp)
+    endif ()
    target_link_libraries(libassert_tests steinwurf::libassert)
    target_link_libraries(libassert_tests gtest_main)
+
 
    # Make sure we compile with C++17 and do not use compiler specific extensions
    set_property(TARGET libassert_tests PROPERTY CXX_STANDARD 17)
