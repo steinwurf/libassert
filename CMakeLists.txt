@@ -71,12 +71,6 @@ endif ()
 
 # install(TARGETS zstd)
 
-if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
-    set(IS_STATIC_DEFINE OFF)
-else ()
-    set(IS_STATIC_DEFINE ON)
-endif ()
-
 include(GNUInstallDirs) # For `lib/lib64` detection using `CMAKE_INSTALL_LIBDIR`.
 include(ExternalProject)
 ExternalProject_add(project_libassert
@@ -149,6 +143,9 @@ if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
     target_link_libraries(libassert INTERFACE libdwarf)
     target_link_libraries(libassert INTERFACE zstd)
     target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
+else()
+    target_link_libraries(cpptrace INTERFACE DbgHelp)
+    target_link_libraries(libassert INTERFACE DbgHelp)
 endif()
 
 
