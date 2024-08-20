@@ -25,11 +25,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - container: ghcr.io/steinwurf/ubuntu-lts-2404:2.0.0
+        - container: ghcr.io/steinwurf/ubuntu-lts-2404:3.0.0
           name: Cmake (GCC) Latest
           cxx: g++
           cc: gcc
-        - container: ghcr.io/steinwurf/ubuntu-lts-2404:2.0.0
+        - container: ghcr.io/steinwurf/ubuntu-lts-2404:3.0.0
           name: Cmake (Clang) Latest
           cxx: clang++
           cc: clang
