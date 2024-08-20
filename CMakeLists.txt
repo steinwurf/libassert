@@ -117,6 +117,11 @@ set_target_properties(cpptrace PROPERTIES
 target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 target_include_directories(cpptrace INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 
+if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
+    target_link_libraries(libassert INTERFACE DbgHelp)
+    target_link_libraries(cpptrace INTERFACE DbgHelp)
+endif ()
+
 target_link_libraries(libassert INTERFACE cpptrace)
 
 # MSVC does not build libdwarf and zstd
@@ -143,9 +148,6 @@ if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
     target_link_libraries(libassert INTERFACE libdwarf)
     target_link_libraries(libassert INTERFACE zstd)
     target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
-else()
-    target_link_libraries(cpptrace INTERFACE DbgHelp)
-    target_link_libraries(libassert INTERFACE DbgHelp)
 endif()
 
 
@@ -192,10 +194,6 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
     add_executable(libassert_tests ${libassert_test_sources})
     add_dependencies(libassert_tests steinwurf::libassert)
 
-    # Link with DbgHelp if on Windows
-    if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
-        target_link_libraries(libassert_tests DbgHelp)
-    endif ()
     target_link_libraries(libassert_tests steinwurf::libassert)
     target_link_libraries(libassert_tests gtest_main)
 
