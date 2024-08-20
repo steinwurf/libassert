@@ -89,14 +89,13 @@ find_package(ZLIB)
 
 add_library(libassert STATIC IMPORTED GLOBAL)
 add_library(cpptrace STATIC IMPORTED GLOBAL)
-add_library(libdwarf STATIC IMPORTED GLOBAL)
-add_library(zstd STATIC IMPORTED GLOBAL)
+
 
 add_dependencies(libassert project_libassert)
 add_library(steinwurf::libassert ALIAS libassert)
 add_library(steinwurf::cpptrace ALIAS cpptrace)
-add_library(steinwurf::libdwarf ALIAS libdwarf)
-add_library(steinwurf::zstd ALIAS zstd)
+
+
 
 
 
@@ -115,29 +114,36 @@ set_target_properties(cpptrace PROPERTIES
    CXX_STANDARD 17
 )
 
-set_target_properties(libdwarf PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX}
-   INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
-   CXX_STANDARD 17
-)
+# MSVC does not build libdwarf and zstd
+if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
+    add_library(libdwarf STATIC IMPORTED GLOBAL)
+    add_library(zstd STATIC IMPORTED GLOBAL)
+    add_library(steinwurf::libdwarf ALIAS libdwarf)
+    add_library(steinwurf::zstd ALIAS zstd)
 
-set_target_properties(zstd PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
-   INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
-   CXX_STANDARD 17
-)
+    set_target_properties(libdwarf PROPERTIES
+    IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX}
+    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+    CXX_STANDARD 17
+    )
 
+    set_target_properties(zstd PROPERTIES
+    IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
+    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
+    CXX_STANDARD 17
+    )
+    target_include_directories(libdwarf INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
+    target_include_directories(zstd INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 
+    target_link_libraries(libassert INTERFACE libdwarf)
+    target_link_libraries(libassert INTERFACE zstd)
+
+endif()
 
 target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 target_include_directories(cpptrace INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
-target_include_directories(libdwarf INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
-target_include_directories(zstd INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
-
 
 target_link_libraries(libassert INTERFACE cpptrace)
-target_link_libraries(libassert INTERFACE libdwarf)
-target_link_libraries(libassert INTERFACE zstd)
 target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
 
 #message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
