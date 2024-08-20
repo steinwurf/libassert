@@ -172,45 +172,45 @@ endif()
 
 # Is top level project?
 if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
-   enable_testing()
+    enable_testing()
 
-   if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
-       # For Windows: Prevent overriding the parent project's compiler/linker
-       # settings
-       set(gtest_force_shared_crt
-               ON
-               CACHE BOOL "" FORCE)
-   endif ()
-
-   # Google Test dependency
-   add_subdirectory("${STEINWURF_RESOLVE}/gtest-source" gtest_main
-           EXCLUDE_FROM_ALL)
-   # Define library
-   file(GLOB_RECURSE libassert_test_sources test/**/*.cpp)
-
-   # Build test executable
-   add_executable(libassert_tests ${libassert_test_sources})
-   add_dependencies(libassert_tests steinwurf::libassert)
-
-   # Link with DbgHelp if on Windows
     if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
-         target_link_libraries(libassert_tests DbgHelp)
+        # For Windows: Prevent overriding the parent project's compiler/linker
+        # settings
+        set(gtest_force_shared_crt
+                ON
+                CACHE BOOL "" FORCE)
     endif ()
-   target_link_libraries(libassert_tests steinwurf::libassert)
-   target_link_libraries(libassert_tests gtest_main)
+
+    # Google Test dependency
+    add_subdirectory("${STEINWURF_RESOLVE}/gtest-source" gtest_main
+            EXCLUDE_FROM_ALL)
+    # Define library
+    file(GLOB_RECURSE libassert_test_sources test/**/*.cpp)
+
+    # Build test executable
+    add_executable(libassert_tests ${libassert_test_sources})
+    add_dependencies(libassert_tests steinwurf::libassert)
+
+    # Link with DbgHelp if on Windows
+    if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
+        target_link_libraries(libassert_tests DbgHelp)
+    endif ()
+    target_link_libraries(libassert_tests steinwurf::libassert)
+    target_link_libraries(libassert_tests gtest_main)
 
 
-   # Make sure we compile with C++17 and do not use compiler specific extensions
-   set_property(TARGET libassert_tests PROPERTY CXX_STANDARD 17)
-   set_property(TARGET libassert_tests PROPERTY CXX_EXTENSIONS OFF)
+    # Make sure we compile with C++17 and do not use compiler specific extensions
+    set_property(TARGET libassert_tests PROPERTY CXX_STANDARD 17)
+    set_property(TARGET libassert_tests PROPERTY CXX_EXTENSIONS OFF)
 
-   # Enable pedantic errors
-   #if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-   #   # GCC is throwing ISO errors from abseil that we can't fix
-   #else ()
-   #   target_compile_options(libassert_tests PUBLIC -pedantic-errors)
-   #endif ()
+    # Enable pedantic errors
+    #if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    #   # GCC is throwing ISO errors from abseil that we can't fix
+    #else ()
+    #   target_compile_options(libassert_tests PUBLIC -pedantic-errors)
+    #endif ()
 
-   add_test(libassert_tests libassert_tests)
+    add_test(libassert_tests libassert_tests)
 
 endif ()
