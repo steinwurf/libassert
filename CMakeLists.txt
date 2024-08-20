@@ -114,6 +114,11 @@ set_target_properties(cpptrace PROPERTIES
    CXX_STANDARD 17
 )
 
+target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
+target_include_directories(cpptrace INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
+
+target_link_libraries(libassert INTERFACE cpptrace)
+
 # MSVC does not build libdwarf and zstd
 if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
     add_library(libdwarf STATIC IMPORTED GLOBAL)
@@ -140,11 +145,9 @@ if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
 
 endif()
 
-target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
-target_include_directories(cpptrace INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
-
-target_link_libraries(libassert INTERFACE cpptrace)
 target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
+
+
 
 #message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 #add_library(libassert STATIC IMPORTED GLOBAL)
