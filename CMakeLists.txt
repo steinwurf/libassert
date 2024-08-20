@@ -77,7 +77,7 @@ ExternalProject_add(project_libassert
     SOURCE_DIR ${STEINWURF_RESOLVE}/libassert-source
     BINARY_DIR ${STEINWURF_RESOLVE}/libassert-source/cmake_build
     INSTALL_DIR ${STEINWURF_RESOLVE}/libassert-source/install
-    CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -DLIBASSERT_STATIC_DEFINE=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     BUILD_COMMAND ${CMAKE_COMMAND} --build ${STEINWURF_RESOLVE}/libassert-source/cmake_build --config ${CMAKE_BUILD_TYPE}
     EXCLUDE_FROM_ALL TRUE
     STEP_TARGETS build
