@@ -142,10 +142,10 @@ if (NOT CMAKE_C_COMPILER_ID MATCHES "MSVC")
 
     target_link_libraries(libassert INTERFACE libdwarf)
     target_link_libraries(libassert INTERFACE zstd)
-
+    target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
 endif()
 
-target_link_libraries(libassert INTERFACE ${ZLIB_LIBRARIES})
+
 
 
 
