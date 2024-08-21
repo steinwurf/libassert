@@ -100,6 +100,7 @@ def CMakeBuildTask(task):
     os.makedirs(output_dir.abspath())
 
     flags = []
+    flags.append(f'-DLIBASSERT_DESIRED_CXX_STANDARD="cxx_std_17"')
     # Our waf mkspec hardcodes the windows runtime to be mutlithreaded static i.e. /MT
     # so we need to pass this to cmake as well so that it can link properly
     # See https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html

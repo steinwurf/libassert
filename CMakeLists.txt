@@ -193,7 +193,7 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
     add_executable(libassert_tests ${libassert_test_sources})
     add_dependencies(libassert_tests steinwurf::libassert)
 
-    target_link_libraries(libassert_tests libassert)
+    target_link_libraries(libassert_tests steinwurf::libassert)
     target_link_libraries(libassert_tests gtest_main)
 
 
