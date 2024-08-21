@@ -110,8 +110,8 @@ def CMakeBuildTask(task):
         elif CMAKE_BUILD_TYPE == "Release":
             flags.append("-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded")
         # For 32 bit builds we need to pass -A Win32 for cross compiling with mkspec
-        if task.env["DEST_CPU"] == "x86":
-            flags.append("-A Win32")
+        # if task.env["DEST_CPU"] == "x86":
+        #     flags.append("-A Win32")
 
     # SRT cmake flags
     flags += [

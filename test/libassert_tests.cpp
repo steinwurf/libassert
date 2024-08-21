@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+// Libassert imports specific functions from the DLL on Windows.
+
 GTEST_API_ int main(int argc, char **argv) {
   srand(static_cast<uint32_t>(time(0)));
 
