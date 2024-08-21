@@ -116,11 +116,6 @@ set_target_properties(cpptrace PROPERTIES
 
 target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 target_include_directories(cpptrace INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
-
-if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
-    target_link_libraries(cpptrace INTERFACE dbghelp)
-endif ()
-
 target_link_libraries(libassert INTERFACE cpptrace)
 
 # MSVC does not build libdwarf and zstd
@@ -196,18 +191,6 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
     target_link_libraries(libassert_tests steinwurf::libassert)
     target_link_libraries(libassert_tests gtest_main)
 
-
-
-    # Make sure we compile with C++17 and do not use compiler specific extensions
-    set_property(TARGET libassert_tests PROPERTY CXX_STANDARD 17)
-    set_property(TARGET libassert_tests PROPERTY CXX_EXTENSIONS OFF)
-
-    # Enable pedantic errors
-    #if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    #   # GCC is throwing ISO errors from abseil that we can't fix
-    #else ()
-    #   target_compile_options(libassert_tests PUBLIC -pedantic-errors)
-    #endif ()
 
     add_test(libassert_tests libassert_tests)
 
