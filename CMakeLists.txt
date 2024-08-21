@@ -197,7 +197,9 @@ if (${PROJECT_NAME} STREQUAL ${STEINWURF_TOP_NAME})
     if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
         target_link_libraries(libassert_tests dbghelp)
     endif ()
+    target_link_libraries(libassert_tests steinwurf::cpptrace)
     target_link_libraries(libassert_tests gtest_main)
+
 
 
     # Make sure we compile with C++17 and do not use compiler specific extensions
