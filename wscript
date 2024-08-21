@@ -67,7 +67,7 @@ def build(bld):
         )
         use += ["zstd"]
     else:
-        use += ["dbghelp"]
+        use += ["DBGHELP"]
     if bld.is_toplevel():
         bld.program(
             features="cxx test",
