@@ -118,7 +118,7 @@ target_include_directories(libassert INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR
 target_include_directories(cpptrace INTERFACE ${LIBASSERT_GENERATED_INCLUDE_DIR})
 
 if (CMAKE_C_COMPILER_ID MATCHES "MSVC")
-    target_link_libraries(cpptrace INTERFACE dbghelp)
+    target_link_libraries(cpptrace PUBLIC dbghelp)
 endif ()
 
 target_link_libraries(libassert INTERFACE cpptrace)
