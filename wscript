@@ -9,8 +9,10 @@ from waflib import Build, Errors, Logs
 APPNAME = "libassert"
 VERSION = "2.1.0"
 
+
 def configure(conf):
     conf.set_cxx_std(17)
+
 
 def build(bld):
     bld.post_mode = Build.POST_LAZY
@@ -24,7 +26,7 @@ def build(bld):
     build_dir = bld.bldnode.make_node("libassert_build")
 
     # Declare the install directory for the external library
-    install_dir = build_dir.make_node("install")
+    install_dir = build_dir.make_node("libassert-source").make_node("install")
 
     # Declare the include directory for the external library
     include_dir = install_dir.make_node("include")
@@ -43,13 +45,15 @@ def build(bld):
     # once it is done create a second build group
     bld.add_group()
 
-    #if platform.system() == "Windows":
+    # if platform.system() == "Windows":
     #    lib_name = "assert"
-    #else:
+    # else:
     #    lib_name = "assert"
 
     bld.read_stlib("assert", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
-    bld.read_stlib("cpptrace", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
+    bld.read_stlib(
+        "cpptrace", paths=[lib_dir, lib64_dir], export_includes=[include_dir]
+    )
     bld.read_stlib("dwarf", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
     bld.read_stlib("zstd", paths=[lib_dir, lib64_dir], export_includes=[include_dir])
 

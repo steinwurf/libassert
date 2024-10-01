@@ -75,15 +75,15 @@ include(GNUInstallDirs) # For `lib/lib64` detection using `CMAKE_INSTALL_LIBDIR`
 include(ExternalProject)
 ExternalProject_add(project_libassert
     SOURCE_DIR ${STEINWURF_RESOLVE}/libassert-source
-    BINARY_DIR ${STEINWURF_RESOLVE}/libassert-source/cmake_build
-    INSTALL_DIR ${STEINWURF_RESOLVE}/libassert-source/install
-    CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -DLIBASSERT_STATIC_DEFINE=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    BUILD_COMMAND ${CMAKE_COMMAND} --build ${STEINWURF_RESOLVE}/libassert-source/cmake_build --config ${CMAKE_BUILD_TYPE}
+    BINARY_DIR ${CMAKE_BINARY_DIR}/libassert-source
+    INSTALL_DIR ${CMAKE_BINARY_DIR}/libassert-source/install
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} ${STEINWURF_RESOLVE}/libassert-source/ -B ${CMAKE_BINARY_DIR}/libassert-source -DLIBASSERT_STATIC_DEFINE=ON -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    BUILD_COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}/libassert-source --config ${CMAKE_BUILD_TYPE}
     EXCLUDE_FROM_ALL TRUE
     STEP_TARGETS build
-    INSTALL_COMMAND ${CMAKE_COMMAND} --install ${STEINWURF_RESOLVE}/libassert-source/cmake_build --prefix ${STEINWURF_RESOLVE}/libassert-source/install --config ${CMAKE_BUILD_TYPE}
-    BUILD_BYPRODUCTS ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}assert${LIB_SUFFIX} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}cpptrace${LIB_SUFFIX} ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
-)
+    INSTALL_COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR}/libassert-source --prefix ${CMAKE_BINARY_DIR}/libassert-source/install --config ${CMAKE_BUILD_TYPE}
+    BUILD_BYPRODUCTS ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_NAME} ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}cpptrace${LIB_SUFFIX} ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX} ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
+  )
 
 find_package(ZLIB)
 
@@ -100,29 +100,28 @@ add_library(steinwurf::zstd ALIAS zstd)
 
 
 
-file(MAKE_DIRECTORY ${STEINWURF_RESOLVE}/libassert-source/install/include)
-set(LIBASSERT_GENERATED_INCLUDE_DIR ${STEINWURF_RESOLVE}/libassert-source/install/include)
-
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/libassert-source/install/include)
+set(LIBASSERT_GENERATED_INCLUDE_DIR ${CMAKE_BINARY_DIR}/libassert-source/install/include)
 set_target_properties(libassert PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}assert${LIB_SUFFIX}
+   IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}assert${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
    CXX_STANDARD 17
 )
 
 set_target_properties(cpptrace PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}cpptrace${LIB_SUFFIX}
+   IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}cpptrace${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
    CXX_STANDARD 17
 )
 
 set_target_properties(libdwarf PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX}
+   IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}dwarf${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
    CXX_STANDARD 17
 )
 
 set_target_properties(zstd PROPERTIES
-   IMPORTED_LOCATION ${STEINWURF_RESOLVE}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
+   IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/libassert-source/install/${CMAKE_INSTALL_LIBDIR}/${LIB_PREFIX}zstd${LIB_SUFFIX}
    INTERFACE_INCLUDE_DIRECTORIES ${LIBASSERT_GENERATED_INCLUDE_DIR}
    CXX_STANDARD 17
 )
